@@ -32,10 +32,12 @@ describe Her::API do
 
     describe "#request" do
       before do
-        class SimpleParser < Faraday::Response::Middleware
+        class SimpleParser < Faraday::Middleware
 
-          def on_complete(env)
-            env[:body] = { data: env[:body] }
+          def call(env)
+            @app.call(env).on_complete do |environment|
+              environment[:body] = { data: environment[:body] }
+            end
           end
         end
       end
@@ -86,17 +88,19 @@ describe Her::API do
       context "parsing a request with a custom parser" do
         let(:parsed_data) { subject.request(_method: :get, _path: "users/1")[:parsed_data] }
         before do
-          class CustomParser < Faraday::Response::Middleware
+          class CustomParser < Faraday::Middleware
 
-            def on_complete(env)
-              json = MultiJson.load(env[:body], symbolize_keys: true)
-              errors = json.delete(:errors) || []
-              metadata = json.delete(:metadata) || {}
-              env[:body] = {
-                data: json,
-                errors: errors,
-                metadata: metadata
-              }
+            def call(env)
+              @app.call(env).on_complete do |environment|
+                json = MultiJson.load(environment[:body], symbolize_keys: true)
+                errors = json.delete(:errors) || []
+                metadata = json.delete(:metadata) || {}
+                environment[:body] = {
+                  data: json,
+                  errors: errors,
+                  metadata: metadata
+                }
+              end
             end
           end
 

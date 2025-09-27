@@ -1,6 +1,20 @@
 module Her
   module Middleware
-    class ParseJSON < Faraday::Response::Middleware
+    class ParseJSON < Faraday::Middleware
+
+      # @private
+      def call(env)
+        @app.call(env).on_complete do |environment|
+          on_complete(environment)
+        end
+      end
+
+      # @private
+      def on_complete(env)
+        if env[:body]
+          env[:body] = parse_json(env[:body])
+        end
+      end
 
       # @private
       def parse_json(body = nil)
@@ -8,7 +22,7 @@ module Her
         message = "Response from the API must behave like a Hash or an Array (last JSON response was #{body.inspect})"
 
         json = begin
-          MultiJson.load(body, :symbolize_keys => true)
+          MultiJson.load(body, symbolize_keys: true)
         rescue MultiJson::LoadError
           raise Her::Errors::ParseError, message
         end
