@@ -24,10 +24,14 @@ module Her
       #   end
       #   # => #<User name="Tobias">
       def initialize(attributes = {})
-        attributes ||= {}
-        @metadata = attributes.delete(:_metadata) || {}
-        @response_errors = attributes.delete(:_errors) || {}
-        @destroyed = attributes.delete(:_destroyed) || false
+        # Ensure attributes is always a hash
+        attributes = {} unless attributes.is_a?(Hash)
+
+        # Support both string and symbol keys for special attributes by checking key existence
+        @metadata = (attributes.key?(:_metadata) ? attributes.delete(:_metadata) : attributes.delete('_metadata')) || {}
+        @metadata = @metadata.symbolize_keys if @metadata.respond_to?(:symbolize_keys)
+        @response_errors = (attributes.key?(:_errors) ? attributes.delete(:_errors) : attributes.delete('_errors')) || {}
+        @destroyed = (attributes.key?(:_destroyed) ? attributes.delete(:_destroyed) : attributes.delete('_destroyed')) || false
 
         attributes = self.class.default_scope.apply_to(attributes)
         assign_attributes(attributes)
