@@ -17,6 +17,9 @@ module Her
         install_proxy_methods :association,
                               :build, :create, :where, :find, :all, :assign_nested_attributes, :reload
 
+        install_proxy_methods 'association.fetch',
+                              :==, :eql?
+
         # @private
         def initialize(association)
           @_her_association = association
