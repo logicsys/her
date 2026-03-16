@@ -2,7 +2,7 @@
 
 require File.join(File.dirname(__FILE__), "../spec_helper.rb")
 
-describe "Her::Model and ActiveModel::Callbacks" do
+RSpec.describe "Her::Model and ActiveModel::Callbacks" do
   before do
     Her::API.setup url: "https://api.example.com" do |builder|
       builder.use Her::Middleware::FirstLevelParseJSON

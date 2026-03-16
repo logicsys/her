@@ -2,7 +2,7 @@
 
 require File.join(File.dirname(__FILE__), "../spec_helper.rb")
 
-describe Her::Model::Attributes do
+RSpec.describe Her::Model::Attributes do
   context "mapping data to Ruby objects" do
     before { spawn_model "Foo::User" }
 

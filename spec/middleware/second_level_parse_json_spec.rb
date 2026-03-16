@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-describe Her::Middleware::SecondLevelParseJSON do
+RSpec.describe Her::Middleware::SecondLevelParseJSON do
   subject { described_class.new }
 
   context "with valid JSON body" do

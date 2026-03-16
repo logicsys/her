@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-describe Her::Model::Associations::AssociationProxy do
+RSpec.describe Her::Model::Associations::AssociationProxy do
   describe "proxy assignment methods" do
     before do
       Her::API.setup url: "https://api.example.com" do |builder|

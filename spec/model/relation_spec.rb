@@ -2,7 +2,7 @@
 
 require File.join(File.dirname(__FILE__), "../spec_helper.rb")
 
-describe Her::Model::Relation do
+RSpec.describe Her::Model::Relation do
   describe :where do
     context "for base classes" do
       before do
